@@ -10,54 +10,55 @@ date: "2023-11-02"
 ---
 
 
+# Summary
+
+> All things are lawful for me, but not all things are helpful; all things are lawful for me, but not all things edify. (1 Cor 10:23)
+
+1. Marginal and conditional effects are about what you *do* with your model after it has been fit. They are intrinsically *interpretive*, which means they depend both on **understanding your model as a model** and **understanding your model as a representation of the world**. This understanding is the difference between using and abusing marginal/conditional effects.
+
+2. For all but the simplest cases, data visualization alone is inadequate, and you need a model. 
+
+3. For all but the simplest models, model parameters alone are hard to interpret, and you need to report and visualize your model in terms of marginal/conditional effects.
+
+4. The terminology of marginal and conditional effects is bewilderingly inconsistent. Each alternative definition is useful and legitimate, but each is incompatible with the others. Barring actual coding errors, there is no such thing as a "wrong" marginal/conditional effect, but there are wrongly *interpreted* effects, and poorly chosen effects. 
+
+5. The best way to sort all this out is to read this online [book](https://marginaleffects.com/) and use the accompanying R package `marginaleffects`.
+
+As a disclaimer, please note that throughout this demonstration, I will be ignoring completely the issue of causal inference, which is the most important thing about any statistical analysis (at least in ecology). The point is just to illustrate the behavior of models. 
+
+
 # A conversation
 
+>Dear Andrew,
+>
+>First of all, thank you so much for all the work you put into your blog. It's the best resource I have found for the sort of modeling questions I encounter in my work.
+>
+>If I may, I have a question concerning the definitions of "marginal" vs. "conditional" effects. I have encountered what would appear to be at least three alternative definitions:
+>
+>1. In your post ["Marginalia"](https://www.andrewheiss.com/blog/2022/05/20/marginalia/), you use the "slider" vs. "switch" analogy; marginal effects are partial derivatives for continuous variables, while conditional effects are discrete "deltas" associated with factor levels. Fair enough --- a good, clean definition. 
+>
+>2. In your more recent [post](https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/), you discuss how the terms marginal and conditional take on a different meaning in the context of hierarchical modeling. If I understand correctly, conditional effects are based solely on the fixed terms of the model, while marginal effects (somehow) incorporate the uncertainty arising from the random effects.
+>
+>3. In the documentation of `ggeffects`, Daniel Lüdecke offers what would seem to be yet another definition: "[The] effects returned by ggpredict() can be described as conditional effects (i.e. these are conditioned on certain levels of factors), while ggemmeans() and ggeffect() return marginal means, since the effects are "marginalized" (or "averaged") over the levels of factors." 
+>
+>I'd be very grateful for any light you can shed on this. 
+>
+>Best,
+>
+>Doug
 
-Dear Andrew,
-
-First of all, thank you so much for all the work you put into your blog. It's the best resource I have found for the sort of modeling questions I encounter in my work.
-
-If I may, I have a question concerning the definitions of "marginal" vs. "conditional" effects. I have encountered what would appear to be at least three alternative definitions:
-
-1. In your post ["Marginalia"](https://www.andrewheiss.com/blog/2022/05/20/marginalia/), you use the "slider" vs. "switch" analogy; marginal effects are partial derivatives for continuous variables, while conditional effects are discrete "deltas" associated with factor levels. Fair enough --- a good, clean definition. 
-
-2. In your more recent [post](https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/), you discuss how the terms marginal and conditional take on a different meaning in the context of hierarchical modeling. If I understand correctly, conditional effects are based solely on the fixed terms of the model, while marginal effects (somehow) incorporate the uncertainty arising from the random effects.
-
-3. In the documentation of `ggeffects`, Daniel Lüdecke offers what would seem to be yet another definition: "[The] effects returned by ggpredict() can be described as conditional effects (i.e. these are conditioned on certain levels of factors), while ggemmeans() and ggeffect() return marginal means, since the effects are "marginalized" (or "averaged") over the levels of factors." 
-
-I'd be very grateful for any light you can shed on this. 
-
-Best,
-
-Doug
 
 ---
 
-Hello!
-
+>Hello!
+>
 Unfortunately all three definitions are true 😭
-
-So marginal effects can refer to little changes in a slider (partial derivatives, or differential calculus), and also to “marginalizing” and averaging across variables and finding marginal means, like the {ggeffects} definition (averages, or integral calculus). The same word means opposite concepts(!). PLUS in the multilevel model paradigm, it refers to dealing with (or not dealing with) random effects.
-
-It’s all a horrible mess.
-
-Andrew Heiss
-
-
-
-
-# The abyss stares back
-
-Marginal and conditional effects are about what we *do* with models once we've gone through all the trouble of making them. All this depends, of course, on understanding how your model works in the first place, and how it relates to the world that it supposedly represents. 
-
-For us ecologists, working through all this is a healthy exercise. Our workflow typically goes something like this. You begin with an understanding of the world that inspires you to measure things. Having gotten your measurements, you place your understanding of the world safely on a shelf somewhere and proceed to the "real work" of doing stats with your measurements. Pretty soon you realize that those t-tests you learned in stats class aren't going to help. Your adviser shows you how to use `aov()` to produce tables that you don't understand. Then somebody introduces you to the `lm()` function and says that `aov()` is totally passé, something about effect sizes, the 1990s, Nirvana, etc. You nod politely and get to work. Just when you finish saving `analysis_final_final_v2.r`, somebody asks you why you're fitting a Gaussian model to count data. The real question, you think to yourself, is why I'm doing this PhD program...but you smile and nod and try `glm()` instead. Now your model is spitting out *completely* different numbers, but some of the p-values still look alright, so you breathe a sigh of relief and start writing your results section. Then your adviser, who has just now looked at that preliminary report you sent 3 months ago, asks why you didn't include region as a covariate in your model, because that's how he did it in that *Ecology* paper from 1995. This triggers painful flashbacks about `aov()` and the Backstreet Boys, but you recover and ask Google what to do with categorical variables. A jolly looking bearded chap named Ben Bolker keeps writing about "mixed effects models" and some package called `lme4`, so, with a `glmer()` of hope, you turn to `analysis_final_final_v13.rmd` (because somebody told you should try RMarkdown) and figure where the | symbol is on your keyboard. You press ctrl-enter, and your world falls apart. Whatever "convergence" means, it's not happening. The summary table gives you the impression that `aov()` is taking revenge for all the bad things you've said about it. Worst of all, the p-values are just *gone*, vanished without a trace. You begin hallucinating. Four months later, sunshine and birdsong wake you from your stats coma. Spring has come again. Gandalf and Sam are standing by your bedside. To your surprise, you look at `analysis_final_final_v37_fuckfuck_vfsebhvfehkbfsdjkhbjnlmk.qt` (Quarto evidently came along during your coma) and discover what looks like a working model. It has p-values. It has diagnostic plots that aren't so bad. In your delirium, you made beautiful plots with gracefully sweeping curves and stout, self-assured boxplots. Gingerly, you take your understanding of the world from its shelf, blow off a layer of dust, and begin to write...
-
-Okay, maybe that's a bit of an exaggeration. Maybe your experience hasn't been as traumatic as mine. But the point is that understanding marginal and conditional effects will require a deep dive into things you may have never fully understood about your models. Hang on tight.   
-
-
-# A disclaimer
-
-Please note that throughout this demonstration, I will be ignoring completely the issue of causal inference, which is the most important thing about any statistical analysis (at least in ecology). The point is just to illustrate the behavior of models. 
+>
+>So marginal effects can refer to little changes in a slider (partial derivatives, or differential calculus), and also to “marginalizing” and averaging across variables and finding marginal means, like the {ggeffects} definition (averages, or integral calculus). The same word means opposite concepts(!). PLUS in the multilevel model paradigm, it refers to dealing with (or not dealing with) random effects.
+>
+>It’s all a horrible mess.
+>
+>Andrew Heiss
 
 
 # Packages
@@ -70,11 +71,6 @@ library(palmerpenguins)
 library(lme4)
 library(mgcv)
 library(ggeffects)
-
-# Bayesian modeling and visualization
-library(brms)
-library(tidybayes)
-library(ggdist)
 
 # Post-hoc analyses
 library(emmeans)
@@ -101,13 +97,13 @@ penguins <- penguins %>%
   mutate(year = factor(year)) # convert `year` to factor
 ```
 
-![Artwork by @allison_horst](./penguins.png)
+![Artwork by @allison_horst](../images/penguins.png)
 
 ```{r}
 datasummary_skim(penguins, type = "categorical")
 ```
 
-![Artwork by @allison_horst](./culmen_depth.png)
+![Artwork by @allison_horst](../images/culmen_depth.png)
 ```{r}
 datasummary_skim(penguins, type = "numeric")
 ```
@@ -277,7 +273,7 @@ ggplot(penguins, aes(species, bill_depth_mm)) +
 
 Now, in this particular case, no great harm has been done. The problem, though, is that this throws away everything we learned from our model except the p-values. That's like baking a fancy birthday cake, then throwing away everything except the candles. P-values by themselves mean very nearly nothing and should never be interpreted. Always and only interpret parameter estimates (and/or their predictions) with their corresponding uncertainty.  
 
-![Baby Ellie examines her model.](./cake.png)
+![Baby Ellie examines her model.](../images/cake.png)
 
 
 # Checkpoint
@@ -463,8 +459,202 @@ Finally, in the context of mixed effect models, the terms "marginal" and "condit
 
 Each of these definitions is, by itself, useful and legitimate. The problem, of course, is that they cannot be reconciled with each other. Whenever you use the term "marginal" or "conditional," it is up to you to understand which of these definitions you are working with, to align this usage with the interpretation of your models, and to communicate all this clearly to your audience.
 
-![https://sketchnotes.at/sketchnotes/umfahren-oder-doch-umfahren/](./umfahren.png)
+![https://sketchnotes.at/sketchnotes/umfahren-oder-doch-umfahren/](../images/umfahren.png)
 
 
 # Introducing `marginaleffects`
+
+Vincent Arel-Bundock appreciates the absurdity of the situation and designed an R packages to help you find your way to the marginal and/or conditional effect you need: `marginaleffects`. He even wrote an online [book](https://marginaleffects.com/) to go with the package. He is your friend. But it is still up to you to *interpret* your marginal/conditional effects legitimately. 
+
+
+## Definition 1: sliders vs. switches
+
+Remember `mod.01`?
+```{r}
+mod.01
+```
+
+Let's get some sliders and switches. We already did this manually, but the `slopes()` function from `marginaleffects` streamlines the process, particularly for more complex models. 
+```{r}
+mod.01_slopes <- slopes(mod.01)
+mod.01_slopes
+```
+
+You might be wondering how we got such a huge data frame. The answer is that `slopes()` assumes that you might be using a more complex model with interactions and such, so it gives you the marginal effect of each variable *for each individual*. In our data, the individuals are 344 penguins, and each row of our data frame is one measured penguin. Thus, `slopes()` provides 344 x 4 (`body mass`, `flipper length`, `species = Chinstrap`, `species =  Gentoo`) rows. For us, this is superfluous, since the estimated effects are the same for all individuals. If we had interactions in our model, though, this would be important, since the effect of each variable on each penguin could depend on the values of the other variables for that penguin. Make sense? In any case, we can get rid of all that redundancy by adding the argument `by = TRUE`, which summarizes across individuals for each variable. We'll also convert the output to a tibble and add the `class` column like we did before.
+
+```{r}
+mod.01_slopes_sum <- slopes(mod.01, by = TRUE) %>%
+  # for plotting convenience
+  tibble() %>% 
+  mutate(class = case_when(
+    term %in% c("body_mass_g", "flipper_length_mm") ~ "Marginal effects",
+    term == "species" ~ "Conditional effects"
+  ))
+
+mod.01_slopes_sum
+```
+
+This plot should look familiar.
+
+```{r}
+ggplot(mod.01_slopes_sum, 
+       aes(contrast, estimate, 
+           ymin = conf.low, 
+           ymax = conf.high)) +
+  geom_point() +
+  geom_errorbar(width = 0.25) +
+  facet_wrap(~class, scales = "free") +
+  theme_lucid()
+```
+
+That was easy enough to do without the help of `marginaleffects`, but what happens when we turn to our `mod.02`, our lovely GAM? 
+```{r}
+mod.02
+```
+
+The slope of `bill length ~ body mass` varies smoothly with the value of `body mass`, so what is the "marginal effect"? Here, we have more than one option, and `marginaleffects` can help us.
+
+First, we might want a bunch of marginal slopes at representative values of `body mass`. This is the default output of `slopes()`, and it approximates the first derivative of our GAM smooth. We could, of course, plot this manually, but here I'll illustrate the built-in plotting function `plot_slopes()`, which is just a wrapper for `ggplot2` (and can therefore be modified with ggplot functions, like `theme_lucid()`).
+
+```{r}
+mod.02_slopes <- slopes(mod.02)
+mod.02_slopes
+
+plot_slopes(mod.02, variables = "body_mass_g", condition = "body_mass_g") +
+  theme_lucid()
+```
+
+Alternatively, we might want to get the "overall" marginal effect by averaging the slope across all values of `body mass`. This would be interpreted as the expected effect of a change in body mass for a penguin of unknown body mass. This might sound like nonsense, but don't jump to conclusions. Maybe you are considering a management intervention --- like, I don't know, supplemental feeding --- that is expected to increase the body mass of the average penguin by 0.5 kg. With this average marginal effect, you could predict the average change in `bill length` in a population of penguins without knowing the starting body mass of any individuals. In `marginaleffects`, we get this "average marginal effect" by adding the `by = TRUE` argument, as we did before.
+
+```{r}
+mod.02_slopes_sum <- slopes(mod.02, by = TRUE) %>%
+  tibble()
+
+mod.02_slopes_sum
+
+ggplot(mod.02_slopes_sum, 
+       aes(term, estimate, 
+           ymin = conf.low, 
+           ymax = conf.high)) +
+  geom_point() +
+  geom_errorbar(width = 0.25) +
+  theme_lucid()
+```
+
+Finally, suppose we have a species interest in penguins weighing 3.5 kg. What is the marginal effect for that specific value of `body mass`? We can specify this --- as well as the values of any other variables of interest --- using the `newdata` argument with the helper function `datagrid()`.
+
+```{r}
+mod.02_slopes_conditional <- slopes(mod.02, 
+                                    newdata = datagrid(body_mass_g = 3500)) %>%
+  tibble()
+
+ggplot(mod.02_slopes_conditional, 
+       aes(term, estimate, 
+           ymin = conf.low, 
+           ymax = conf.high)) +
+  geom_point() +
+  geom_errorbar(width = 0.25) +
+  theme_lucid()
+```
+
+
+## Definition 2: conditioning vs. averaging
+
+Now let's turn to out interaction model. In `mod.03`, the slope of `bill depth ~ flipper length` varies across penguin species. 
+
+```{r}
+mod.03
+```
+
+In this context, the **marginal effect** of `flipper length` on `bill depth` means averaging the effect of `flipper length` across species. As you might expect, we can do this with the `by = TRUE` argument.
+
+```{r}
+mod.03_marginalslopes <- slopes(mod.03, variables = "flipper_length_mm", by = TRUE) %>%
+  tibble()
+
+mod.03_marginalslopes
+
+ggplot(mod.03_marginalslopes, 
+       aes(term, estimate, 
+           ymin = conf.low, 
+           ymax = conf.high)) +
+  geom_point() +
+  geom_errorbar(width = 0.25) +
+  theme_lucid()
+```
+
+And we can plot the marginal predictions using the handy `plot_predictions()` function. 
+
+```{r}
+plot_predictions(mod.03, condition = "flipper_length_mm") +
+  theme_lucid()
+```
+
+The **conditional effect** of `flipper length`, on the other hand, is the effect of `flipper length` for each species, or for a select species. We can get this by adding the argument `condition = species`, and `plot_slopes` gives us a lovely visualization. 
+
+```{r}
+mod.03_conditionalslopes <- slopes(mod.03, variables = "flipper_length_mm", by = "species") %>%
+  tibble()
+
+mod.03_conditionalslopes
+
+plot_slopes(mod.03, variables = "flipper_length_mm", condition = "species") + 
+  theme_lucid()
+```
+
+Now let's plot the conditional predictions. Maybe our main interest is in the conditional slope of `bill depth ~ flipper length` across species.
+
+```{r}
+plot_predictions(mod.03, condition = c("flipper_length_mm", "species")) +
+  theme_lucid()
+```
+
+Alternatively, maybe we want to focus on the **conditional** mean of `bill depth` across species while **marginalizing** (i.e. averaging) over `flipper length`. Under definition 2, you often marginalize and condition at the same time to get the estimate you want.
+
+```{r}
+plot_predictions(mod.03, condition = c("species")) +
+  theme_lucid()
+```
+
+
+## Definition 3: incorporating vs. ignoring random effects
+
+Finally, let's turn our attention to question of random effects raised in `mod.04`.
+
+```{r}
+mod.04
+```
+
+The **conditional** prediction of `bill depth ~ flipper length` is based only on the fixed effect of `flipper_length`, ignoring the random effect of `species`. We get this by specifying `re.form = NA`.
+```{r}
+plot_predictions(mod.04, 
+                 condition = "flipper_length_mm",
+                 re.form = NA) +
+  theme_lucid()
+```
+
+To get the **marginal** prediction, incorporating the uncertainty arising from the random effect, we set `re.form = NULL`.
+
+```{r}
+plot_predictions(mod.04, 
+                 condition = "flipper_length_mm",
+                 re.form = NULL) +
+  theme_lucid()
+```
+
+
+# Things that didn't fit
+
+I ran out of time to talk about two very important topics: 
+
+1. Post-hoc contrasts
+2. Marginal and conditional effects in Bayesian models
+
+I encourage you to [read](https://marginaleffects.com/) on your own or come talk to me.
+
+
+
+
+
+
 
